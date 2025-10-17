@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lite Computer Simulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #fdbb2d;
+            padding-bottom: 15px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #fdbb2d, #b21f1f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+        
+        .computer {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .panel {
+            background: rgba(30, 30, 50, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #444;
+        }
+        
+        .panel h2 {
+            margin-bottom: 15px;
+            color: #fdbb2d;
+            font-size: 1.4rem;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background: #222;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        button {
+            background: linear-gradient(to right, #b21f1f, #fdbb2d);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 5px;
+            width: calc(50% - 10px);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .output {
+            background: #111;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 10px;
+            min-height: 100px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            border: 1px solid #333;
+        }
+        
+        .binary-display {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            justify-content: center;
+        }
+        
+        .bit {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #222;
+            border-radius: 5px;
+            font-weight: bold;
+            border: 2px solid #444;
+        }
+        
+        .bit.on {
+            background: #fdbb2d;
+            color: black;
+        }
+        
+        .memory-cell {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            margin: 5px;
+            background: #222;
+            border-radius: 5px;
+            border: 1px solid #444;
+        }
+        
+        .memory-cell.active {
+            background: #b21f1f;
+        }
+        
+        .instructions {
+            margin-top: 25px;
+            background: rgba(30, 30, 50, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .instructions h2 {
+            color: #fdbb2d;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .computer {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Lite Computer Simulator</h1>
+            <p class="subtitle">A functional computer simulation using mathematical logic systems</p>
+        </header>
+        
+        <div class="computer">
+            <div class="panel">
+                <h2>Arithmetic Logic Unit (ALU)</h2>
+                
+                <div class="input-group">
+                    <label for="inputA">Input A (Decimal):</label>
+                    <input type="number" id="inputA" value="5" min="0" max="255">
+                </div>
+                
+                <div class="input-group">
+                    <label for="inputB">Input B (Decimal):</label>
+                    <input type="number" id="inputB" value="3" min="0" max="255">
+                </div>
+                
+                <div class="input-group">
+                    <label for="operation">Operation:</label>
+                    <select id="operation">
+                        <option value="add">Addition</option>
+                        <option value="subtract">Subtraction</option>
+                        <option value="multiply">Multiplication</option>
+                        <option value="and">Bitwise AND</option>
+                        <option value="or">Bitwise OR</option>
+                        <option value="xor">Bitwise XOR</option>
+                        <option value="not">Bitwise NOT (A only)</option>
+                    </select>
+                </div>
+                
+                <button id="executeBtn">Execute Operation</button>
+                
+                <div class="input-group">
+                    <label>Result (Decimal):</label>
+                    <div class="output" id="decimalResult">0</div>
+                </div>
+                
+                <div class="input-group">
+                    <label>Result (Binary):</label>
+                    <div class="binary-display" id="binaryResult">
+                        <!-- Binary bits will be generated here -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h2>Memory & Control Unit</h2>
+                
+                <div class="input-group">
+                    <label for="memoryAddress">Memory Address (0-15):</label>
+                    <input type="number" id="memoryAddress" value="0" min="0" max="15">
+                </div>
+                
+                <div class="input-group">
+                    <label for="memoryValue">Value to Store (0-255):</label>
+                    <input type="number" id="memoryValue" value="0" min="0" max="255">
+                </div>
+                
+                <button id="storeBtn">Store in Memory</button>
+                <button id="loadBtn">Load from Memory</button>
+                
+                <div class="input-group">
+                    <label>Memory Contents:</label>
+                    <div class="output" id="memoryDisplay">
+                        <!-- Memory cells will be generated here -->
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label>Program Output:</label>
+                    <div class="output" id="programOutput">
+                        <!-- Program output will appear here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h2>How This Computer Works</h2>
+            <ul>
+                <li><strong>ALU</strong> performs arithmetic and logical operations using binary logic gates</li>
+                <li><strong>Memory</strong> stores 16 bytes of data with addresses 0-15</li>
+                <li><strong>Control Unit</strong> manages data flow between memory and ALU</li>
+                <li>All operations are performed using fundamental logic gates (AND, OR, NOT, XOR)</li>
+                <li>Try different operations and observe how binary values change</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Initialize memory with zeros
+        const memory = new Array(16).fill(0);
+        let currentOutput = 0;
+        
+        // Initialize binary display
+        function initBinaryDisplay() {
+            const binaryDisplay = document.getElementById('binaryResult');
+            binaryDisplay.innerHTML = '';
+            
+            for (let i = 7; i >= 0; i--) {
+                const bit = document.createElement('div');
+                bit.className = 'bit';
+                bit.textContent = '0';
+                bit.id = `bit${i}`;
+                binaryDisplay.appendChild(bit);
+            }
+        }
+        
+        // Initialize memory display
+        function initMemoryDisplay() {
+            const memoryDisplay = document.getElementById('memoryDisplay');
+            memoryDisplay.innerHTML = '';
+            
+            for (let i = 0; i < 16; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'memory-cell';
+                cell.textContent = memory[i];
+                cell.id = `mem${i}`;
+                memoryDisplay.appendChild(cell);
+            }
+        }
+        
+        // Update binary display
+        function updateBinaryDisplay(value) {
+            const binary = value.toString(2).padStart(8, '0');
+            
+            for (let i = 0; i < 8; i++) {
+                const bit = document.getElementById(`bit${7-i}`);
+                bit.textContent = binary[i];
+                bit.className = binary[i] === '1' ? 'bit on' : 'bit';
+            }
+        }
+        
+        // Update memory display
+        function updateMemoryDisplay() {
+            for (let i = 0; i < 16; i++) {
+                const cell = document.getElementById(`mem${i}`);
+                cell.textContent = memory[i];
+                cell.className = 'memory-cell';
+            }
+            
+            const address = parseInt(document.getElementById('memoryAddress').value);
+            if (address >= 0 && address < 16) {
+                document.getElementById(`mem${address}`).className = 'memory-cell active';
+            }
+        }
+        
+        // Logic gate implementations
+        function AND(a, b) {
+            return a & b;
+        }
+        
+        function OR(a, b) {
+            return a | b;
+        }
+        
+        function NOT(a) {
+            return ~a & 0xFF; // Mask to 8 bits
+        }
+        
+        function XOR(a, b) {
+            return a ^ b;
+        }
+        
+        // ALU operations
+        function performOperation(operation, a, b) {
+            switch(operation) {
+                case 'add':
+                    return (a + b) & 0xFF; // Mask to 8 bits
+                case 'subtract':
+                    return (a - b) & 0xFF;
+                case 'multiply':
+                    return (a * b) & 0xFF;
+                case 'and':
+                    return AND(a, b);
+                case 'or':
+                    return OR(a, b);
+                case 'xor':
+                    return XOR(a, b);
+                case 'not':
+                    return NOT(a);
+                default:
+                    return 0;
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('executeBtn').addEventListener('click', function() {
+            const a = parseInt(document.getElementById('inputA').value) || 0;
+            const b = parseInt(document.getElementById('inputB').value) || 0;
+            const operation = document.getElementById('operation').value;
+            
+            currentOutput = performOperation(operation, a, b);
+            
+            document.getElementById('decimalResult').textContent = currentOutput;
+            updateBinaryDisplay(currentOutput);
+            
+            // Show operation in program output
+            const opNames = {
+                'add': 'ADD', 'subtract': 'SUB', 'multiply': 'MUL',
+                'and': 'AND', 'or': 'OR', 'xor': 'XOR', 'not': 'NOT'
+            };
+            document.getElementById('programOutput').textContent = 
+                `ALU: ${opNames[operation]} ${a}, ${operation === 'not' ? '' : b} → Result: ${currentOutput}`;
+        });
+        
+        document.getElementById('storeBtn').addEventListener('click', function() {
+            const address = parseInt(document.getElementById('memoryAddress').value);
+            const value = parseInt(document.getElementById('memoryValue').value) || 0;
+            
+            if (address >= 0 && address < 16) {
+                memory[address] = value;
+                updateMemoryDisplay();
+                document.getElementById('programOutput').textContent = 
+                    `Memory: Stored value ${value} at address ${address}`;
+            }
+        });
+        
+        document.getElementById('loadBtn').addEventListener('click', function() {
+            const address = parseInt(document.getElementById('memoryAddress').value);
+            
+            if (address >= 0 && address < 16) {
+                const value = memory[address];
+                document.getElementById('memoryValue').value = value;
+                document.getElementById('programOutput').textContent = 
+                    `Memory: Loaded value ${value} from address ${address}`;
+                updateMemoryDisplay();
+            }
+        });
+        
+        // Initialize displays
+        initBinaryDisplay();
+        initMemoryDisplay();
+        updateBinaryDisplay(0);
+        updateMemoryDisplay();
+        
+        // Execute a sample operation on load
+        setTimeout(() => {
+            document.getElementById('executeBtn').click();
+        }, 500);
+    </script>
+</body>
+</html>
